@@ -10,12 +10,13 @@ import com.klaus.backend.Model.Expenses;
 import com.klaus.backend.Repository.Specifications.ExpensesSpec;
 
 public class ExpensesQueryFilter {
-    private String desc, paymentMethod, category;
+    private String desc, paymentMethod, category, username;
     private Double amount;
     private LocalDate startDate, endDate;
 
     public Specification<Expenses> toSpecification() {
-        return descriptionContains(desc)
+        return belongsToUser(username)
+                .and(descriptionContains(desc))
                 .and(ExpensesSpec.categoryContains(category))
                 .and(ExpensesSpec.paymentMethodContains(paymentMethod))
                 .and(ExpensesSpec.hasAmount(amount))
