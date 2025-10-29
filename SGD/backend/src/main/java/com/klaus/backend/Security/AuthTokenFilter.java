@@ -27,6 +27,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Autowired
+    private CookieUtil cookieUtil;
+
+    @Autowired
     CustomUserDetailsService customUserDetailsService;
 
     @Autowired
@@ -36,7 +39,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String jwt = jwtUtil.parseJwt(request);
+            String jwt = cookieUtil.extractTokenFromCookie(request);
             if (jwt != null && jwtUtil.validateToken(jwt)) {
                 final String username = jwtUtil.getUserFromToken(jwt);
                 final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -47,12 +50,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authenticationToken);
-
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         } catch (Exception e) {
-            log.error("Rapz tu não pode acessar não ó: {}", e);
+            log.error("Não autorizado: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
     }
