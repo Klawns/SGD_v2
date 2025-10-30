@@ -9,6 +9,9 @@ import org.springframework.data.jpa.domain.Specification;
 import com.klaus.backend.Model.Expenses;
 import com.klaus.backend.Repository.Specifications.ExpensesSpec;
 
+import lombok.Data;
+
+@Data
 public class ExpensesQueryFilter {
     private String desc, paymentMethod, category, username;
     private Double amount;

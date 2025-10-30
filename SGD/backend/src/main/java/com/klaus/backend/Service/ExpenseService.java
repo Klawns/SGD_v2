@@ -25,6 +25,8 @@ public class ExpenseService {
 
     public Page<Expenses> listExpenses(Pageable pageable, ExpensesQueryFilter filter) {
         try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            filter.setUsername(username);
             return expensesRepository.findAll(filter.toSpecification(), pageable);
         } catch (Exception e) {
             throw new IllegalArgumentException("Erro ao listar despesas: " + e.getMessage());
