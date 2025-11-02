@@ -33,3 +33,7 @@ build/
 .vscode/
 
 .env
+
+SGD/frontend/node_modules
+SGD/frontend/dist
+SGD/frontend/build
