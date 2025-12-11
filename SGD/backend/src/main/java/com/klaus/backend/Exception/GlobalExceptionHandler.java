@@ -49,4 +49,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", "Ocorreu um erro interno no servidor. Tente novamente mais tarde."));
     }
+
+
 }

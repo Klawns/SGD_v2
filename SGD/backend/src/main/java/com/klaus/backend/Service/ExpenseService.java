@@ -26,7 +26,7 @@ public class ExpenseService {
 
     public Page<Expenses> listExpenses(Pageable pageable, ExpensesQueryFilter filter) {
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            String username = getAuthenticatedUsername();
             filter.setUsername(username);
             return expensesRepository.findAll(filter.toSpecification(), pageable);
         } catch (Exception e) {
@@ -39,25 +39,22 @@ public class ExpenseService {
         try {
             Expenses expense = mapper.toEntity(req);
 
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            String username = getAuthenticatedUsername();
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-
             expense.setUser(user);
-
             return expensesRepository.save(expense);
         } catch (Exception e) {
             throw new IllegalArgumentException("Erro ao salvar despesa: " + e.getMessage());
         }
     }
 
-    @Transactional
     public Expenses updateExpense(Long id, ExpensesRequestDTO req) {
         try {
-            Expenses existingExpense = expensesRepository.findById(id)
+            Expenses existingExpense = expensesRepository.findByIdAndUsername(id, getAuthenticatedUsername())
                     .orElseThrow(() -> new ResourceNotFoundException("Despesa", id));
             mapper.updateEntityFromDto(req, existingExpense);
-            return expensesRepository.save(existingExpense);
+            return existingExpense;
         } catch (Exception e) {
             throw new IllegalArgumentException("Erro ao atualizar despesa: " + e.getMessage());
         }
@@ -65,10 +62,15 @@ public class ExpenseService {
 
     @Transactional
     public void deleteExpense(Long id) {
-        Expenses existingExpense = expensesRepository.findById(id)
+        Expenses existingExpense = expensesRepository.findByIdAndUsername(id, getAuthenticatedUsername())
                 .orElseThrow(() -> new ResourceNotFoundException("Despesa", id));
-
+        
         expensesRepository.delete(existingExpense);
     }
 
+
+    public String getAuthenticatedUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+    
 }
