@@ -223,8 +223,8 @@ public class RelatorioService {
                 // Valor (número)
                 Cell c4 = row.createCell(col++);
                 if (e.getAmount() != null) {
-                    c4.setCellValue(e.getAmount());
-                    totalValor = totalValor.add(BigDecimal.valueOf(e.getAmount()));
+                    c4.setCellValue(e.getAmount().doubleValue());
+                    totalValor = totalValor.add(e.getAmount());
                 } else {
                     c4.setCellValue(0.0);
                 }

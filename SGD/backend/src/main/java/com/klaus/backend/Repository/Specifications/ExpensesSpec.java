@@ -6,6 +6,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
 import com.klaus.backend.Model.Expenses;
+import com.klaus.backend.Model.Enum.CategoryType;
+import com.klaus.backend.Model.Enum.PaymentMethod;
 
 public class ExpensesSpec {
 
@@ -23,23 +25,17 @@ public class ExpensesSpec {
         };
     }
 
-    public static Specification<Expenses> categoryContains(String category) {
-        return (root, query, builder) -> {
-            if (!StringUtils.hasText(category))
-                return null;
-            return builder.like(
-                    builder.lower(root.get("category")),
-                    "%" + category.toLowerCase() + "%");
+    public static Specification<Expenses> categoryEquals(CategoryType category) {
+        return (root, query, cb) -> {
+            if (category == null) return null;
+            return cb.equal(root.get("category"), category);
         };
     }
 
-    public static Specification<Expenses> paymentMethodContains(String paymentMethod) {
-        return (root, query, builder) -> {
-            if (!StringUtils.hasText(paymentMethod))
-                return null;
-            return builder.like(
-                    builder.lower(root.get("paymentMethod")),
-                    "%" + paymentMethod.toLowerCase() + "%");
+    public static Specification<Expenses> paymentMethodEquals(PaymentMethod paymentMethod) {
+        return (root, query, cb) -> {
+            if (paymentMethod == null) return null;
+            return cb.equal(root.get("paymentMethod"), paymentMethod);
         };
     }
 

@@ -1,13 +1,19 @@
 package com.klaus.backend.Model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.klaus.backend.Model.Enum.CategoryType;
+import com.klaus.backend.Model.Enum.ExpenseType;
+import com.klaus.backend.Model.Enum.PaymentMethod;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,16 +39,21 @@ public class Expenses {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private Double amount;
+    private BigDecimal amount;
     @Column(nullable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate date;
     @Column(nullable = false)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private CategoryType category;
     @Column(nullable = false)
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
     @Column(nullable = false)
     private String installments;
+    @Enumerated(EnumType.STRING)
+    private ExpenseType type;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

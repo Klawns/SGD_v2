@@ -1,5 +1,6 @@
 package com.klaus.backend.Model;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +43,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Expenses> expenses;
+
+    @Column(nullable = false)
+    private BigDecimal salary;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
